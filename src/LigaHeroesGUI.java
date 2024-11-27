@@ -19,7 +19,7 @@ public class LigaHeroesGUI {
     private GestionHeroes gestion = new GestionHeroes();
 
     public LigaHeroesGUI() {
-
+        // Agregar los elementos al comboBox1
         for (int i = 1; i <= 5; i++) {
             comboBox1.addItem(i);
         }
@@ -39,7 +39,7 @@ public class LigaHeroesGUI {
                     gestion.registrarHeroe(heroe);
 
                     textArea1.setText("Héroe registrado exitosamente.\n");
-                    LIMPIARFORMULARIOButton.doClick(); // Limpia el formulario automáticamente
+                    LIMPIARFORMULARIOButton.doClick();
                 } catch (Exception ex) {
                     textArea1.setText("Error al registrar el héroe: " + ex.getMessage());
                 }
@@ -76,11 +76,11 @@ public class LigaHeroesGUI {
                 try {
                     double nuevoPago = Double.parseDouble(textField6.getText());
                     gestion.modificarHeroe(id, nuevoPago);
-                    textArea1.setText("Pago mensual del héroe actualizado.\n");
+                    textArea1.setText("Datos del heroe actualizados con éxito!\n");
                 } catch (Exception ex) {
                     textArea1.setText("Error al actualizar el héroe: " + ex.getMessage());
                 }
-
+                limpiarFormulario();
             }
         });
         MOSTRARLISTADEHEROESButton.addActionListener(new ActionListener() {
@@ -89,13 +89,15 @@ public class LigaHeroesGUI {
                 StringBuilder sb = new StringBuilder("Héroes Registrados:\n");
                 gestion.listarHeroes(sb); // Recorre el árbol y agrega los héroes al StringBuilder
                 textArea1.setText(sb.toString());
+
             }
 
         });
         LIMPIARFORMULARIOButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    limpiarFormulario();
+
+                limpiarFormulario();
                 }
         });
 

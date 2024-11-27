@@ -9,15 +9,31 @@ public class GestionHeroes {
 
 
     public void registrarHeroe(Heroes heroe) throws Exception {
+        if (heroe.getId() == null || heroe.getId().isEmpty()) {
+            throw new Exception("El ID del héroe no puede estar vacío.");
+        }
+        if (heroe.getNombre() == null || heroe.getNombre().isEmpty()) {
+            throw new Exception("El nombre del héroe no puede estar vacío.");
+        }
+        if (heroe.getSuperpoder() == null || heroe.getSuperpoder().isEmpty()) {
+            throw new Exception("El superpoder del héroe no puede estar vacío.");
+        }
+        if (heroe.getMision() == null || heroe.getMision().isEmpty()) {
+            throw new Exception("La misión del héroe no puede estar vacía.");
+        }
+        if (heroe.getPagoMensual() <= 0) {
+            throw new Exception("El pago mensual debe ser mayor que cero.");
+        }
+
         raiz = insertar(raiz, heroe);
     }
-
 
     private NodoHeroes insertar(NodoHeroes nodo, Heroes heroe) throws Exception {
         if (nodo == null) {
             return new NodoHeroes(heroe, null, null);
         }
 
+        // Validación de duplicados
         if (heroe.getId().compareTo(nodo.heroe.getId()) < 0) {
             nodo.izquierda = insertar(nodo.izquierda, heroe);
         } else if (heroe.getId().compareTo(nodo.heroe.getId()) > 0) {
@@ -28,8 +44,10 @@ public class GestionHeroes {
         return nodo;
     }
 
-
     public Heroes buscarHeroe(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("El ID del héroe no puede estar vacío.");
+        }
         return buscar(raiz, id);
     }
 
@@ -46,6 +64,10 @@ public class GestionHeroes {
     }
 
     public String calcularAporteImpuestos(String id) {
+        if (id == null || id.isEmpty()) {
+            return "El ID del héroe no puede estar vacío.";
+        }
+
         Heroes heroe = buscarHeroe(id);
         if (heroe == null) {
             return "Héroe no encontrado con ID: " + id;
@@ -85,23 +107,41 @@ public class GestionHeroes {
         return pagoMensual * porcentaje;
     }
 
-
     public void modificarHeroe(String id, double nuevoPago) {
-        Heroes heroe = buscarHeroe(id);
-        if (heroe != null) {
-            heroe.setPagoMensual(nuevoPago);
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("El ID del héroe no puede estar vacío.");
         }
+
+        if (nuevoPago <= 0) {
+            throw new IllegalArgumentException("El nuevo pago mensual debe ser mayor que cero.");
+        }
+
+        Heroes heroe = buscarHeroe(id);
+        if (heroe == null) {
+            throw new IllegalArgumentException("Héroe no encontrado con ID: " + id);
+        }
+
+        heroe.setPagoMensual(nuevoPago);
     }
 
 
     public void listarHeroes(StringBuilder sb) {
+        if (sb == null) {
+            throw new IllegalArgumentException("El StringBuilder no puede ser nulo.");
+        }
+
+        if (raiz == null) {
+            sb.append("No hay héroes registrados.");
+            return;
+        }
+
         listarHeroesRec(raiz, sb);
     }
 
     private void listarHeroesRec(NodoHeroes nodo, StringBuilder sb) {
         if (nodo != null) {
             listarHeroesRec(nodo.izquierda, sb);
-            sb.append(String.format("ID: %s, Nombre: %s, Superpoder: %s, Misión: %s, Nivel: %d, Pago: %.2f\n",
+            sb.append(String.format("ID: %s\nNombre: %s\nSuperpoder: %s\nMisión: %s\nNivel: %d\nPago: %.2f\n",
                     nodo.heroe.getId(), nodo.heroe.getNombre(), nodo.heroe.getSuperpoder(),
                     nodo.heroe.getMision(), nodo.heroe.getNivelDificultad(), nodo.heroe.getPagoMensual()));
             listarHeroesRec(nodo.derecha, sb);
